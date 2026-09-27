@@ -1,82 +1,91 @@
 type User = {
-    id: number,
-    userId: number,
-    tittle: string,
-    body: string
-}
+  id: number;
+  userId: number;
+  tittle: string;
+  body: string;
+};
 
 const userExample: User = {
-    id: 8,
-    userId: 12,
-    tittle: "exemplo",
-    body: "blablabla"
+  id: 8,
+  userId: 12,
+  tittle: "exemplo",
+  body: "blablabla",
+};
+
+async function getAllUser(){
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "GET",
+    });
+
+    if(!response.ok){
+        throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
+    return response.json();
+
+  } catch (error) {
+    console.log(`Erro ao buscar usuarios: ${error}`);
+  }
 }
 
-
-async function getAllUser(): Promise<User>{
+async function getUserById(ID: number) {
+  try {
     const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts",
-        {
-            method: "GET"
-        }
+      `https://jsonplaceholder.typicode.com/posts/${ID}`,
+      {
+        method: "GET",
+      },
     );
 
-    return response.json();
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.log(`Erro ao buscar usuario: ${error}`);
+  }
 }
 
-async function getUserById(ID: number): Promise<User>{
-    const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${ID}`,
-        {
-            method: "GET"
-        }
-    )
+async function createUser(user: User) {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
 
-    return response.json();
-}
-
-async function createUser(user: User){
-    const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts/",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(user)
-        }
-    );
-
-    return response.json();
+  return response.json();
 }
 
 async function deleteUserById(ID: number) {
-    const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${ID}`,
-        {
-            method: "DELETE"
-        }
-    )
-    return response.json();
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${ID}`,
+    {
+      method: "DELETE",
+    },
+  );
+  return response.json();
 }
 
 async function updateUserById(ID: number, user: User) {
-    const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${ID}`,
-        {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(user)
-        }
-
-    )
-        return response.json();   
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${ID}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    },
+  );
+  return response.json();
 }
 
 async function showCContent() {
-    console.log(await getUserById(1));
+  console.log(await getUserById(1));
 }
 
 showCContent();
